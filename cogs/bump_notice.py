@@ -17,6 +17,7 @@ class BumpNotice(cmds.Cog):
         if message is None:
             return
 
+        # メッセージ元のidがDISBOARDと一致するか比較...さすればよきかな
         if message.author.id != 302050872383242240:
             return
 
@@ -25,6 +26,7 @@ class BumpNotice(cmds.Cog):
 
         print(message.embeds[0].description)
 
+        # embedのdescriptionが「表示順をアップしたよ」で始まるか...さすればいい感じだろう
         if not message.embeds[0].description.startswith('表示順をアップしたよ'):
             return
 
@@ -46,6 +48,7 @@ class BumpNotice(cmds.Cog):
 
         await message.channel.send(embed=embed)
 
+        # １時間後の通知用だっぴ
         await asyncio.sleep(3600)
 
         embed = d.Embed(

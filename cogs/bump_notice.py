@@ -1,8 +1,8 @@
 import asyncio
-
 import discord as d
 from discord.ext import commands as cmds
 import datetime as dt
+import settings as s
 
 
 class BumpNotice(cmds.Cog):
@@ -25,11 +25,11 @@ class BumpNotice(cmds.Cog):
             return
 
         # embedのdescriptionが「表示順をアップしたよ」で始まるか...さすればいい感じだろう
-        if not message.embeds[0].description.startswith('表示順をアップしたよ'):
+        if message.embeds[0].description.find('表示順をアップしたよ') < 0:
             return
 
         now = dt.datetime.now()
-        next_bump = now + dt.timedelta(hours=1)
+        next_bump = now + dt.timedelta(hours=2)
 
         embed = d.Embed(
             title='「/bump」が実行されました！',
@@ -47,16 +47,24 @@ class BumpNotice(cmds.Cog):
         await message.channel.send(embed=embed)
 
         # １時間後の通知用だっぴ
-        await asyncio.sleep(3600)
+        await asyncio.sleep(7)
+
+        role = message.guild.get_role(s.bump_role_id)
 
         embed = d.Embed(
             title='「/bump」が実行可能になりました！',
             colour=d.Colour.teal()
         )
 
-        return await message.channel.send(
-            embed=embed
-        )
+        if role is not None:
+            return await message.channel.send(
+                role.mention,
+                embed=embed
+            )
+        else:
+            return await message.channel.send(
+                embed=embed
+            )
 
     @cmds.Cog.listener(name="on_message_edit")
     async def dissoku_up(
@@ -67,10 +75,16 @@ class BumpNotice(cmds.Cog):
         if a is None:
             return
 
+        if a.author.id != 761562078095867916:
+            return
+
         if a.embeds is None:
             return
 
-        if a.embeds[0].description.find('をアップしたよ!') < 0:
+        if a.embeds[0].fields[0].name is None:
+            return
+
+        if a.embeds[0].fields[0].name.find('をアップしたよ') < 0:
             return
 
         now = dt.datetime.now()
@@ -92,16 +106,24 @@ class BumpNotice(cmds.Cog):
         await a.channel.send(embed=embed)
 
         # １時間後の通知用だっぴ
-        await asyncio.sleep(3600)
+        await asyncio.sleep(3)
+
+        role = a.guild.get_role(s.bump_role_id)
 
         embed = d.Embed(
             title='「/dissoku up」が実行可能になりました！',
             colour=d.Colour.teal()
         )
 
-        return await a.channel.send(
-            embed=embed
-        )
+        if role is not None:
+            return await a.channel.send(
+                role.mention,
+                embed=embed
+            )
+        else:
+            return await a.channel.send(
+                embed=embed
+            )
 
 
 async def setup(bot: cmds.Bot):

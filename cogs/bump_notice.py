@@ -54,7 +54,7 @@ class BumpNotice(cmds.Cog):
         if not a.embeds[0].fields or "をアップしたよ" not in a.embeds[0].fields[0].name:
             return
 
-        await _send_bump_notification(a, "dissoku_up", 2)
+        await _send_bump_notification(a, "dissoku_up", 1)
 
 
 async def setup(bot: cmds.Bot):

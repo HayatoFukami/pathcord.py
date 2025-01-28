@@ -1,6 +1,8 @@
+import os
+from dotenv import load_dotenv
 import discord as d
 from discord.ext import commands as cmds
-import settings as s
+from settings import COGS
 
 
 class MyBot(cmds.Bot):
@@ -11,16 +13,18 @@ class MyBot(cmds.Bot):
         )
 
     async def setup_hook(self) -> None:
-        if s.cogs is not None:
-            for cog in s.cogs:
+        if COGS is not None:
+            for cog in COGS:
                 await self.load_extension(cog)
-                print(f'Loaded {cog}')
+                print(f"Loaded {cog}")
         # await self.tree.sync()
 
     async def on_ready(self):
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    load_dotenv()
+    token = os.getenv("PATHCORD_TOKEN")
     bot = MyBot()
-    bot.run(s.TOKEN)
+    bot.run(token)

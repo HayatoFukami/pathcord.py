@@ -17,12 +17,12 @@ async def _send_bump_notification(message: d.Message, command_name: str, delay: 
                     value=f"{next_bump.hour}時{next_bump.minute}分{next_bump.second}秒")
 
     await message.channel.send(embed=embed)
-    await asyncio.sleep(delay)
+    await asyncio.sleep(delay * 3600)
 
     role = message.guild.get_role(BUMP_ROLE_ID)
     mention = role.mention if role else ""
 
-    embed = d.Embed(title="「/{command_name}」が実行可能になりました！",
+    embed = d.Embed(title=f"「/{command_name}」が実行可能になりました！",
                     colour=d.Colour.teal())
 
     await message.channel.send(mention, embed=embed)
